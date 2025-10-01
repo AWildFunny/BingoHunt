@@ -1,0 +1,15 @@
+{
+  "criteria": {
+    "pvp_kill": {
+      "trigger": "minecraft:entity_killed_player",
+      "conditions": {
+        "entity": {
+          "type": "minecraft:player"
+        }
+      }
+    }
+  },
+  "rewards": {
+    "function": "main:on_kill/detect_kill"
+  }
+} 

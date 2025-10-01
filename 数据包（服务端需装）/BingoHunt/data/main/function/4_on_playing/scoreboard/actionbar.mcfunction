@@ -1,0 +1,5 @@
+# 给猎物以外的所有人显示 actionbar：当前猎物名字
+# 当无人为猎物时，向所有玩家显示“准备阶段”
+execute as @a[tag=!prey] run title @s actionbar [{"text":"当前猎物：","color":"yellow"},{"selector":"@a[tag=prey,limit=1]"},{"text":"  [你的分数：","color":"white","bold":true},{"score":{"name":"@s","objective":"score"},"color":"white","bold":true},{"text":"]","color":"white","bold":true}]
+execute as @a[tag=prey] run title @s actionbar [{"text":"当前：你是猎物！","color":"red"},{"text":"  [你的分数：","color":"white","bold":true},{"score":{"name":"@s","objective":"score"},"color":"white","bold":true},{"text":"]","color":"white","bold":true}]
+execute unless entity @a[tag=prey] as @a run title @s actionbar [{"text":"当前：准备阶段","color":"green"},{"text":"  [你的分数：","color":"white","bold":true},{"score":{"name":"@s","objective":"score"},"color":"white","bold":true},{"text":"]","color":"white","bold":true}]

@@ -1,0 +1,8 @@
+{
+    "values": [
+        "selkeepinv:load",
+        "bingofinal:internal/load",
+        "main:load",
+        "vanilla_modify:load"
+    ]
+}  

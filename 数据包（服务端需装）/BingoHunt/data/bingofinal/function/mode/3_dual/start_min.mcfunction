@@ -1,0 +1,1 @@
+tellraw @a {"text":"[3_dual] start_min OK","color":"yellow"} 

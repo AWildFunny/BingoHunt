@@ -1,0 +1,1 @@
+tellraw @a {"text":"[3_dual] ping (1t)","color":"gold"}

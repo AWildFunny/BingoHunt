@@ -10,6 +10,6 @@
     }
   },
   "rewards": {
-    "function": "main:on_kill/detect_kill"
+    "function": "main:4_on_playing/on_kill/on_pvp_kill"
   }
 } 

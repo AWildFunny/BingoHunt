@@ -21,7 +21,7 @@ execute as @a run scoreboard players operation @s items_prev = @s bingo_items
 # 开启 playing 标志并启动 tick 循环
 scoreboard objectives add playing dummy
 scoreboard players set global playing 1
-schedule function main:tick/_tick 1t replace
+schedule function main:4_on_playing/tick/_tick 1t replace
 
 # 清除旧的“猎物”和临时“候选”标签
 tag @a remove prey

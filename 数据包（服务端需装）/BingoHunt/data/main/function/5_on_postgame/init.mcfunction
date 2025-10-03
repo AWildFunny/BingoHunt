@@ -2,7 +2,7 @@ tellraw @a {"text":"[Bingo] 阶段：on_postgame","color":"red"}
 
 # 停止 detect 循环并关闭 playing
 scoreboard players set global playing 0
-schedule clear main:tick/_tick
+schedule clear main:4_on_playing/tick/_tick
 
 # 停止 circle 计时循环
 schedule clear main:4_on_playing/countdown 

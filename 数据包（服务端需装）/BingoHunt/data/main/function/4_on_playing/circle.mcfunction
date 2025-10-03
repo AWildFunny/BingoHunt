@@ -31,22 +31,21 @@ tag @a remove top
 # 为“猎物”添加发光效果
 effect give @a[tag=prey] minecraft:glowing 999999 0 true
 
-# 修改猎物的定位条样式
-execute as @a run waypoint modify @s style reset
-waypoint modify @a[tag=prey,limit=1] style set bowtie
+# 修改定位条
+function main:4_on_playing/waypoint/init
+
+# 调试：打印所有玩家的 score
+tellraw @a {"text":"----- 本轮分数 -----","color":"gray"}
+execute as @a run tellraw @a [{"selector":"@s"},{"text":" 的score：","color":"yellow"},{"score":{"name":"@s","objective":"score"},"color":"aqua"}]
 
 # 播放提示音并广播“猎物”公告（以猎物为位置与名称来源）
-execute at @a[tag=prey,limit=1] run playsound minecraft:entity.player.levelup master @a ~ ~ ~ 1 1
-execute as @a[tag=prey,limit=1] run tellraw @a [{"text":"本轮循环结束：","color":"gold"},{"selector":"@s"},{"text":" 成为猎物！","color":"gold"}]
+execute at @a run playsound minecraft:entity.player.levelup master @a ~ ~ ~ 1.5 1
+execute as @a run tellraw @a [{"text":"本轮循环结束：","color":"gold"},{"selector":"@s"},{"text":" 成为猎物！","color":"gold"}]
 
 # 轮数 +1
 scoreboard players add turn turn 1
 
-# 调试：打印所有玩家的 score
-tellraw @a {"text":"[Debug] 各玩家 score：","color":"gray"}
-execute as @a run tellraw @a [{"selector":"@s"},{"text":" 的score：","color":"yellow"},{"score":{"name":"@s","objective":"score"},"color":"aqua"}]
-
 # 结尾提示
-tellraw @a {"text":"circle结算完毕，重新初始化","color":"green"}
+# tellraw @a {"text":"circle结算完毕，重新初始化","color":"green"}
 
 

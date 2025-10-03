@@ -5,12 +5,6 @@ scoreboard objectives add calc dummy
 # 变量 bonus_para = 64
 scoreboard players set #bonus_para var 64
 
-# 计算最高分并为其打上 prey 标签（并清理旧标签）
-tag @a remove prey
-scoreboard players set #max var -2147483648
-execute as @a run scoreboard players operation #max var > @s score
-execute as @a if score @s score = #max var run tag @s add prey
-
 # 为每位玩家计算应发放的货币：calc = score * bonus_para
 execute as @a run scoreboard players operation @s calc = @s score
 execute as @a run scoreboard players operation @s calc *= #bonus_para var
@@ -61,3 +55,6 @@ execute as @a if score @s calc matches 2.. run give @s minecraft:emerald 2
 execute as @a if score @s calc matches 2.. run scoreboard players remove @s calc 2
 execute as @a if score @s calc matches 1.. run give @s minecraft:emerald 1
 execute as @a if score @s calc matches 1.. run scoreboard players remove @s calc 1
+
+# 执行完毕播放音效
+execute at @a run playsound minecraft:block.bell.use master @a ~ ~ ~ 1.5 1

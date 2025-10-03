@@ -1,38 +1,49 @@
 # 6_deathmatch team on_death - handle any player death
-# 依赖：prey(标签), bf.deaths(猎物死亡计数), bf.revive_timer(复活倒计时)
+# 规则：
+# - 猎人：无限复活，不添加观察者限制（直接返回，不做处理）
+# - 猎物/卧底：各自三条命；达到3次后转为旁观者并显示标题
+#   * 猎物用尽三条命：尝试用卧底替补为猎物并将自己TP至新的猎物处；若没有卧底，则宣布猎人胜利
+#   * 卧底用尽三条命：若仍有猎物存在，将自己TP至任意猎物处；若没有猎物，则宣布猎人胜利
 
-# 0) 非猎物：给予30秒复活时间并进入观察者
-#  - 设定复活倒计时 600tick (=30s)
-#  - 标记 reviving，并切换旁观者模式
-#  - 立即返回
-scoreboard objectives add bf.revive_timer dummy
-execute unless entity @s[tag=prey] run scoreboard players set @s bf.revive_timer 600
-execute unless entity @s[tag=prey] run tag @s add reviving
-execute unless entity @s[tag=prey] run gamemode spectator @s
-execute unless entity @s[tag=prey] run title @s actionbar {"text":"复活中（30秒）","color":"yellow"}
-execute unless entity @s[tag=prey] run return 0
-
-# 1) 猎物：累计死亡次数
+# 计分目标（已在 init 中创建；此处再次添加以容错）
 scoreboard objectives add bf.deaths dummy
+
+# 0) 猎人（既不是猎物也不是卧底）：不限制复活，直接返回
+execute unless entity @s[tag=prey] unless entity @s[tag=undercover] run return 0
+
+# 1) 增加死亡次数（适用于猎物与卧底）
 scoreboard players add @s bf.deaths 1
 
-# 2) 达到3次及以上：转为观察者并移除猎物身份
-execute if score @s bf.deaths matches 3.. run tag @s remove prey
-execute if score @s bf.deaths matches 3.. run tag @s add eliminated
-execute if score @s bf.deaths matches 3.. run gamemode spectator @s
+# 2) 未达3次：直接返回
+execute if score @s bf.deaths matches ..2 run return 0
 
-# 3) 若达到3+，尝试用“卧底”替补；否则宣布猎人胜利
-# 3.1) 存在卧底：随机挑选1名卧底替补为猎物，并全员广播标题
-execute if score @s bf.deaths matches 3.. if entity @a[tag=undercover] as @r[tag=undercover] run tag @s add uc_selected
-execute if entity @a[tag=uc_selected] run tag @a[tag=uc_selected] remove undercover
-execute if entity @a[tag=uc_selected] run tag @a[tag=uc_selected] add prey
-# 广播：在死者上下文下引用其名，在被选卧底上下文下引用其名
-execute if entity @a[tag=uc_selected] as @s run title @a title {"text":"猎物","color":"red","extra":[{"selector":"@s"},{"text":"已死亡！卧底","color":"gold"},{"selector":"@a[tag=uc_selected,limit=1]"},{"text":"代替成为猎物","color":"gold"}]}
-execute if entity @a[tag=uc_selected] run title @a subtitle {"text":"猎人目标：击杀全部猎物  ｜  猎物目标：生存至游戏结束","color":"gray"}
-execute if entity @a[tag=uc_selected] run playsound minecraft:entity.wither.spawn master @a ~ ~ ~ 0.8 1
-execute if entity @a[tag=uc_selected] run tag @a remove uc_selected
+# 3) 达到3次及以上：统一显示淘汰标题并设置旁观者
+title @s title {"text":"你死了！","color":"red","bold":true}
+title @s subtitle {"text":"已无法复活","color":"gray"}
+gamemode spectator @s
 
-# 3.2) 不存在卧底：宣布猎人胜利（所有猎物已死亡）
-execute if score @s bf.deaths matches 3.. unless entity @a[tag=undercover] run title @a title {"text":"猎人胜利！","color":"red","bold":true}
-execute if score @s bf.deaths matches 3.. unless entity @a[tag=undercover] run title @a subtitle {"text":"猎物已经全部死亡","color":"gray"}
-execute if score @s bf.deaths matches 3.. unless entity @a[tag=undercover] run playsound minecraft:ui.toast.challenge_complete master @a ~ ~ ~ 1 1
+# 4) 分支处理
+# 4.1) 若为猎物：尝试用“卧底”替补
+# 随机挑选卧底作为替补（临时标签 uc_selected）
+execute if entity @s[tag=prey] if entity @a[tag=undercover] as @r[tag=undercover] run tag @s add uc_selected
+# 选中者转为猎物
+execute if entity @s[tag=prey] if entity @a[tag=uc_selected] run tag @a[tag=uc_selected] remove undercover
+execute if entity @s[tag=prey] if entity @a[tag=uc_selected] run tag @a[tag=uc_selected] add prey
+# 将被淘汰的自己传送到新猎物处
+execute if entity @s[tag=prey] if entity @a[tag=uc_selected] run tp @s @a[tag=uc_selected,limit=1]
+# 清理临时标签
+execute if entity @s[tag=prey] if entity @a[tag=uc_selected] run tag @a remove uc_selected
+# 若没有卧底可替补：宣布猎人胜利
+execute if entity @s[tag=prey] unless entity @a[tag=undercover] run function main:6_deathmatch/decide/hunter_win
+# 移除自己的猎物身份，标记淘汰
+execute if entity @s[tag=prey] run tag @s remove prey
+execute if entity @s[tag=prey] run tag @s add eliminated
+
+# 4.2) 若为卧底：根据猎物是否存在决定传送或直接宣布胜利
+# 若仍有猎物：把自己传送到任意猎物处
+execute if entity @s[tag=undercover] if entity @a[tag=prey] run tp @s @r[tag=prey]
+# 若没有猎物：宣布猎人胜利
+execute if entity @s[tag=undercover] unless entity @a[tag=prey] run function main:6_deathmatch/decide/hunter_win
+# 卧底淘汰标记与身份移除
+execute if entity @s[tag=undercover] run tag @s add eliminated
+execute if entity @s[tag=undercover] run tag @s remove undercover

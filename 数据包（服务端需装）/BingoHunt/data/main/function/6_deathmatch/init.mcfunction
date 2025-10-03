@@ -1,6 +1,7 @@
+
 # 停止 detect 循环并关闭 playing
 scoreboard players set global playing 0
-schedule clear main:tick/_tick
+schedule clear main:4_on_playing/tick/_tick
 
 # 停止 circle 计时循环
 schedule clear main:4_on_playing/countdown 
@@ -11,20 +12,30 @@ execute as @a run execute in bingofinal:duel run tp @s 22 14 4
 # 通用模式：自动分配槽位并放置基地/出生点/传送
 function bingofinal:mode/common/run
 
-# 调用 allocate 执行位置分配
-function main:6_deathmatch/allocate
+# 计算最高分并为其打上 prey 标签（并清理旧标签）
+tag @a remove prey
+scoreboard players set #max var -2147483648
+execute as @a run scoreboard players operation #max var > @s score
+execute as @a if score @s score = #max var run tag @s add prey
 
+# 初始化队伍
+function main:6_deathmatch/team/init_team
+
+# 货币发放倒计时
 # 清理并创建倒计时 Bossbar（10秒）
 bossbar remove main:6_deathmatch/countdown
 bossbar remove bingofinal:end_timer
-bossbar add main:6_deathmatch/countdown {"text":"身份牌发放倒计时"}
+bossbar add main:6_deathmatch/countdown {"text":"货币发放倒计时"}
 bossbar set main:6_deathmatch/countdown players @a
 bossbar set main:6_deathmatch/countdown max 10
 bossbar set main:6_deathmatch/countdown value 10
-
 # 准备倒计时计分板
 scoreboard objectives add bf.timer dummy
 scoreboard players set $dm bf.timer 10
 
+# 初始化开始决战标志为0
+scoreboard objectives add dualing dummy
+scoreboard players set global dualing 0
+
 # 启动每秒倒计时
-schedule function main:6_deathmatch/countdown_tick 1s 
+schedule function main:6_deathmatch/countdown_tick 1s

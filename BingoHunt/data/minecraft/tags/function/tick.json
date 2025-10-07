@@ -1,0 +1,7 @@
+{
+    "values": [
+        "selkeepinv:tick",
+        "main:reward/reward_hp",
+        "vanilla_modify:tick"
+    ]
+} 

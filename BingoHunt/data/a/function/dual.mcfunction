@@ -1,0 +1,1 @@
+function main:6_deathmatch/init

@@ -7,6 +7,8 @@ execute as @a[tag=prey] run title @s actionbar {"text":"[身份] 猎物  ","colo
 execute as @a[tag=undercover] run title @s actionbar {"text":"[身份] 卧底  ","color":"gold","extra":[{"text":"| 目标：帮助猎物，击杀末影龙 ","color":"gray"},{"text":"| 死亡 ","color":"yellow"},{"score":{"name":"@s","objective":"bf.deaths"}},{"text":"/3","color":"gray"}]}
 execute as @a[tag=!prey,tag=!undercover] run title @s actionbar {"text":"[身份] 猎人  ","color":"red","extra":[{"text":"| 目标：击杀全部猎物","color":"gray"}]} 
 
+function main:6_deathmatch/sidebar/sidebar_update
+
 # 倒计时音效
 execute as @a if score $dm bf.timer matches 60 run tellraw @a {"text":"决战准备：最后一分钟！","color":"red"}
 execute as @a if score $dm bf.timer matches 60 run playsound minecraft:block.note_block.pling master @a ~ ~ ~ 1

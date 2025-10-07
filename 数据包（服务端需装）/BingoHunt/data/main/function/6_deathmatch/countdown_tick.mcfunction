@@ -5,6 +5,8 @@ execute store result bossbar main:6_deathmatch/countdown value run scoreboard pl
 # 到 0 则移除 Bossbar
 execute if score $dm bf.timer matches 0 run bossbar remove main:6_deathmatch/countdown
 
+function main:6_deathmatch/sidebar/sidebar_update
+
 # 未到 0 则继续调度
 execute if score $dm bf.timer matches 1.. run schedule function main:6_deathmatch/countdown_tick 1s
 

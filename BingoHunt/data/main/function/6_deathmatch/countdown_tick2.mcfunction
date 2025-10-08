@@ -9,15 +9,17 @@ execute as @a[tag=!prey,tag=!undercover] run title @s actionbar {"text":"[身份
 
 function main:6_deathmatch/sidebar/sidebar_update
 
-# 倒计时音效
+# 倒计时音效（60秒提示）
 execute as @a if score $dm bf.timer matches 60 run tellraw @a {"text":"决战准备：最后一分钟！","color":"red"}
-execute as @a if score $dm bf.timer matches 60 run playsound minecraft:block.note_block.pling master @a ~ ~ ~ 1
+execute if score $dm bf.timer matches 60 at @a run playsound minecraft:block.note_block.pling master @a ~ ~ ~ 2 1
 
-# 倒计时音效
-execute as @a if score $dm bf.timer matches 4 run playsound minecraft:block.note_block.pling master @a ~ ~ ~ 1
-execute as @a if score $dm bf.timer matches 3 run playsound minecraft:block.note_block.pling master @a ~ ~ ~ 1
-execute as @a if score $dm bf.timer matches 2 run playsound minecraft:block.note_block.pling master @a ~ ~ ~ 1
-execute as @a if score $dm bf.timer matches 1 run playsound minecraft:block.note_block.pling master @a ~ ~ ~ 1 2
+execute as @a if score $dm bf.timer matches 15 run tellraw @a {"text":"决战准备：最后十五秒！","color":"red"}
+execute if score $dm bf.timer matches 15 at @a run playsound minecraft:block.note_block.pling master @a ~ ~ ~ 2 1
+
+execute if score $dm bf.timer matches 4 at @a run playsound minecraft:block.note_block.pling master @a ~ ~ ~ 2 1
+execute if score $dm bf.timer matches 3 at @a run playsound minecraft:block.note_block.pling master @a ~ ~ ~ 2 1
+execute if score $dm bf.timer matches 2 at @a run playsound minecraft:block.note_block.pling master @a ~ ~ ~ 2 1
+execute if score $dm bf.timer matches 1 at @a run playsound minecraft:block.note_block.pling master @a ~ ~ ~ 3 2
 
 # 到 0 则移除 Bossbar
 execute if score $dm bf.timer matches 0 run bossbar remove main:6_deathmatch/countdown2

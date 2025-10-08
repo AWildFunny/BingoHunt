@@ -2,6 +2,7 @@
     "values": [
         "selkeepinv:tick",
         "main:reward/reward_hp",
-        "vanilla_modify:tick"
+        "vanilla_modify:tick",
+        "main:6_deathmatch/stage_detect/detect_enter_end"
     ]
 } 

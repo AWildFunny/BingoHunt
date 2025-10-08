@@ -1,4 +1,4 @@
-
+scoreboard objectives add var dummy
 # 计算最高分并为其打上 prey 标签（并清理旧标签）
 tag @a remove prey
 scoreboard players set #max var -2147483648
@@ -29,4 +29,4 @@ scoreboard players set @a[tag=prey] bf.deaths 0
 scoreboard players set @a[tag=undercover] bf.deaths 0
 
 # 初始化完毕播放音效
-execute at @a run playsound minecraft:entity.player.levelup master @a ~ ~ ~ 1.5 1
+execute at @a run playsound minecraft:entity.player.levelup master @a ~ ~ ~ 1.5 0.5

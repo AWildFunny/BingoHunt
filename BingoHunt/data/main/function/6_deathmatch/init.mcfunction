@@ -12,12 +12,6 @@ execute as @a run execute in bingofinal:duel run tp @s 22 14 4
 # 通用模式：自动分配槽位并放置基地/出生点/传送
 function bingofinal:mode/common/run
 
-# 计算最高分并为其打上 prey 标签（并清理旧标签）
-tag @a remove prey
-scoreboard players set #max var -2147483648
-execute as @a run scoreboard players operation #max var > @s score
-execute as @a if score @s score = #max var run tag @s add prey
-
 # 初始化队伍
 function main:6_deathmatch/team/init_team
 

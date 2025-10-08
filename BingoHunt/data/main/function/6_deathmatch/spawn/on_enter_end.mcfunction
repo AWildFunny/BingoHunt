@@ -1,5 +1,5 @@
 # 决战未开始时传送回出生点
-execute unless score global dualing matches 1 run function main:6_deathmatch/spawn/return_spawn
+execute if score global dualing matches 0 run function main:6_deathmatch/spawn/return_spawnpoint
 
 # 决战开始时随机出生点
 execute if score global dualing matches 1 run function main:6_deathmatch/spawn/random_spawn

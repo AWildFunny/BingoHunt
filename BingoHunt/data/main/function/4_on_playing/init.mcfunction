@@ -3,6 +3,8 @@ tellraw @a {"text":"[Bingo] 阶段：on_playing","color":"green"}
 # 创建名为 circle_time 的计分板（dummy 类型，用作计时）
 scoreboard objectives add circle_time dummy
 
+execute as @a run function selkeepinv:give_kit
+
 # 循环时间设置
 # 将虚拟玩家 circle 在 circle_time 计分板上的数值设为 180（秒）
 scoreboard players set circle circle_time 180

@@ -1,5 +1,0 @@
-advancement revoke @s only bingofinal:enter_end
-
- 
-title @s actionbar {"text":"进入末地","color":"green"}
-tellraw @s {"text":"进入末地","color":"green"} advancement revoke @s only selkeepinv:enter_nether

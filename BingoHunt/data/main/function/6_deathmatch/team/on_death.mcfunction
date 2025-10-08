@@ -29,6 +29,8 @@ execute if entity @s[tag=prey] if entity @a[tag=undercover] as @r[tag=undercover
 # 选中者转为猎物
 execute if entity @s[tag=prey] if entity @a[tag=uc_selected] run tag @a[tag=uc_selected] remove undercover
 execute if entity @s[tag=prey] if entity @a[tag=uc_selected] run tag @a[tag=uc_selected] add prey
+# 重置新猎物的死亡计数为 0，避免继承卧底旧计数导致立即淘汰
+execute if entity @s[tag=prey] if entity @a[tag=uc_selected] run scoreboard players set @a[tag=uc_selected,limit=1] bf.deaths 0
 # 将被淘汰的自己传送到新猎物处
 execute if entity @s[tag=prey] if entity @a[tag=uc_selected] run tp @s @a[tag=uc_selected,limit=1]
 # 清理临时标签

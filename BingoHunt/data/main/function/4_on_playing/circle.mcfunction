@@ -1,5 +1,3 @@
-tellraw @a {"text":"circle结算开始","color":"green"}
-
 # 去除所有人的发光效果
 effect clear @a minecraft:glowing
 
